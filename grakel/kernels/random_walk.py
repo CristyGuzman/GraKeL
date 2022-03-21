@@ -147,6 +147,7 @@ class RandomWalk(Kernel):
             The extracted adjacency matrices for any given input.
 
         """
+        print("Starting to parse input")
         if not isinstance(X, collections.Iterable):
             raise TypeError('input must be an iterable\n')
         else:
