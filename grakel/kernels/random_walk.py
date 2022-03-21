@@ -170,6 +170,7 @@ class RandomWalk(Kernel):
                 elif type(x) is Graph:
                     A = x.get_adjacency_matrix()
                 else:
+                    print(f'x is: {x} with length: {len(x)}')
                     raise TypeError('each element of X must be either a ' +
                                     'graph or an iterable with at least 1 ' +
                                     'and at most 3 elements\n')
