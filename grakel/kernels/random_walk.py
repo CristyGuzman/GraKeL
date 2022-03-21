@@ -155,7 +155,7 @@ class RandomWalk(Kernel):
             out = list()
             print(X)
             for (idx, x) in enumerate(iter(X)):
-                print(f'printing {idx} element: \n {x}')
+                print(f'printing {idx} element: \n {type(x[0])} \n which has length {len(x)}')
                 is_iter = isinstance(x, collections.Iterable)
                 if is_iter:
                     x = list(x)
