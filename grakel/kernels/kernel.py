@@ -16,6 +16,7 @@ from sklearn.utils.validation import check_is_fitted
 from grakel.graph import Graph
 from grakel.kernels._c_functions import k_to_ij_triangular
 from grakel.kernels._c_functions import k_to_ij_rectangular
+from tqdm import tqdm
 
 # Python 2/3 cross-compatibility import
 from six import iteritems
@@ -224,15 +225,18 @@ class Kernel(BaseEstimator, TransformerMixin):
 
         """
         if Y is None:
+            print('Y argument not provided')
             K = np.zeros(shape=(len(self.X), len(self.X)))
             if self._parallel is None:
+                print(f'Parallel computations: {self._parallel}')
                 cache = list()
-                for (i, x) in enumerate(self.X):
+                for (i, x) in tqdm(enumerate(self.X)):
                     K[i, i] = self.pairwise_operation(x, x)
                     for (j, y) in enumerate(cache):
                         K[j, i] = self.pairwise_operation(y, x)
                     cache.append(x)
             else:
+                print(f'Parallel computations {self._parallel}: {self.n_jobs} jobs')
                 dim = len(self.X)
                 n_jobs, nsamples = self._n_jobs, ((dim+1)*(dim))//2
 
@@ -246,6 +250,7 @@ class Kernel(BaseEstimator, TransformerMixin):
             K = np.triu(K) + np.triu(K, 1).T
 
         else:
+            print('Y argument provided')
             K = np.zeros(shape=(len(Y), len(self.X)))
             if self._parallel is None:
                 for (j, y) in enumerate(Y):
