@@ -257,6 +257,7 @@ class Kernel(BaseEstimator, TransformerMixin):
                     for (i, x) in enumerate(self.X):
                         K[j, i] = self.pairwise_operation(y, x)
             else:
+                print(f'Parallel computations {self._parallel}: {self.n_jobs} jobs')
                 dim_X, dim_Y = len(self.X), len(Y)
                 n_jobs, nsamples = self._n_jobs, (dim_X * dim_Y)
 
@@ -264,9 +265,9 @@ class Kernel(BaseEstimator, TransformerMixin):
                     return k_to_ij_rectangular(k, dim_X)
 
                 split = [iter(((j, i), (Y[j], self.X[i])) for i, j in
-                         map(kij, range(*rg))) for rg in indexes(n_jobs, nsamples)]
+                         tqdm(map(kij, range(*rg)))) for rg in indexes(n_jobs, nsamples)]
 
-                self._parallel(joblib.delayed(assign)(s, K, self.pairwise_operation) for s in split)
+                self._parallel(joblib.delayed(assign)(s, K, self.pairwise_operation) for s in tqdm(split))
         return K
 
     def diagonal(self):
