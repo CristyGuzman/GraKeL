@@ -244,7 +244,7 @@ class Kernel(BaseEstimator, TransformerMixin):
                     return k_to_ij_triangular(k, dim)
 
                 split = [iter(((i, j), (self.X[i], self.X[j])) for i, j in
-                         map(kij, range(*rg))) for rg in indexes(n_jobs, nsamples)]
+                         tqdm(map(kij, range(*rg)))) for rg in indexes(n_jobs, nsamples)]
 
                 self._parallel(joblib.delayed(assign)(s, K, self.pairwise_operation) for s in split)
             K = np.triu(K) + np.triu(K, 1).T
