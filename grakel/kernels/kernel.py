@@ -164,7 +164,9 @@ class Kernel(BaseEstimator, TransformerMixin):
         self._is_transformed = True
         if self.normalize:
             X_diag, Y_diag = self.diagonal()
-            km /= np.sqrt(np.outer(Y_diag, X_diag))
+            outer = np.outer(Y_diag, X_diag)
+            print(f'Number of negative elements: {np.sum(outer < 0)}')
+            km /= np.sqrt(outer)
         return km
 
     def fit_transform(self, X):
@@ -199,7 +201,9 @@ class Kernel(BaseEstimator, TransformerMixin):
 
         self._X_diag = np.diagonal(km)
         if self.normalize:
-            return km / np.sqrt(np.outer(self._X_diag, self._X_diag))
+            outer = np.outer(self._X_diag, self._X_diag)
+            print(f'Number of negative elements: {np.sum(outer < 0)}')
+            return km / np.sqrt(outer)
         else:
             return km
 
