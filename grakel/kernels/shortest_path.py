@@ -93,6 +93,7 @@ class ShortestPathAttr(Kernel):
             A list of tuples of shortest path matrices and tehir attributes.
 
         """
+        print("Starting to parse sp input")
         if not isinstance(X, collections.Iterable):
             raise TypeError('input must be an iterable\n')
         else:
@@ -390,6 +391,7 @@ class ShortestPath(Kernel):
 
         """
         self._method_calling = 2
+        print('shortest path kernel. Fitting X')
         self.fit(X)
 
         # calculate feature matrices.
@@ -405,7 +407,9 @@ class ShortestPath(Kernel):
 
         self._X_diag = np.diagonal(km)
         if self.normalize:
-            return np.divide(km, np.sqrt(np.outer(self._X_diag, self._X_diag)))
+            outer = np.outer(self._X_diag, self._X_diag)
+            print(f'number of negative elements in SP kernel matrix: {np.sum(outer < 0)}')
+            return np.divide(km, np.sqrt(outer))
         else:
             return km
 
@@ -429,6 +433,7 @@ class ShortestPath(Kernel):
             tuples.
 
         """
+        print(f'Starting to parse input for SP kernel')
         if not isinstance(X, collections.Iterable):
             raise TypeError('input must be an iterable\n')
             # Not a dictionary
@@ -451,14 +456,17 @@ class ShortestPath(Kernel):
                                       + str(idx))
                         continue
                     elif len(x) == 1:
+                        print(f'iter object has length {len(x)}')
                         spm_data = Graph(x[0], {}, {}, self._graph_format
                                          ).build_shortest_path_matrix(self.algorithm_type,
                                                                       labels=self._lt)
                     else:
+                        print(f'iter object has length {len(x)}')
                         spm_data = Graph(x[0], x[1], {}, self._graph_format
                                          ).build_shortest_path_matrix(self.algorithm_type,
                                                                       labels=self._lt)
                 elif type(x) is Graph:
+                    print(f'Type of iter is {type(x)}')
                     spm_data = x.build_shortest_path_matrix(self.algorithm_type, labels=self._lt)
                 else:
                     raise TypeError('each element of X must have at least' +
