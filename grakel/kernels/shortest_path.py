@@ -466,7 +466,7 @@ class ShortestPath(Kernel):
                                          ).build_shortest_path_matrix(self.algorithm_type,
                                                                       labels=self._lt)
                 elif type(x) is Graph:
-                    print(f'Type of iter is {type(x)}')
+                    #print(f'Type of iter is {type(x)}')
                     spm_data = x.build_shortest_path_matrix(self.algorithm_type, labels=self._lt)
                 else:
                     raise TypeError('each element of X must have at least' +
